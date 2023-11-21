@@ -3,7 +3,7 @@ RED = \033[0;91m
 GREEN = \033[0;92m
 
 NAME = philo
-GCCFLG = gcc -Wall -Wextra -Werror -pthread -I .philosopher.h
+GCCFLG = gcc -Wall -Wextra -Werror -I .philosopher.h
 
 SRCS = philosopher.c \
 			init.c	\
@@ -19,7 +19,7 @@ OBJS = $(addprefix $(OBJ)/, ${SRCS:.c=.o})
 all: $(NAME)
 
 $(NAME): ${OBJS}
-	@$(GCCFLG) -o $(NAME) $(OBJS) -fsanitize=thread
+	@$(GCCFLG) -o $(NAME) $(OBJS)
 	@echo "$(GREEN)Philo is up to date!${DEFAULT}"
 
 $(OBJ)/%.o: ./%.c
