@@ -26,7 +26,7 @@ int	is_numeric(char **argv)
 		while (argv[i][j])
 		{
 			if (argv[i][j] < '0' || argv[i][j] > '9')
-				return (ft_error("Error : No numeric"));
+				return (ft_error("Error : No numeric or negative arg"));
 			j++;
 		}
 		j = 0;
