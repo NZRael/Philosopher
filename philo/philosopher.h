@@ -55,7 +55,7 @@ typedef struct s_all
 	t_ph	*philos;
 }			t_all;
 
-void		init(t_all *all);
+void 		init(t_all *all);
 int			parsing(t_all *all, char **argv, int argc);
 void		end(t_all *all);
 void		freeall(t_all *all);

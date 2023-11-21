@@ -19,7 +19,7 @@ OBJS = $(addprefix $(OBJ)/, ${SRCS:.c=.o})
 all: $(NAME)
 
 $(NAME): ${OBJS}
-	@$(GCCFLG) -o $(NAME) $(OBJS) -fsanitize=thread -g
+	@$(GCCFLG) -o $(NAME) $(OBJS)
 	@echo "$(GREEN)Philo is up to date!${DEFAULT}"
 
 $(OBJ)/%.o: ./%.c
