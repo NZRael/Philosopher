@@ -12,42 +12,42 @@
 
 #include "philosopher.h"
 
-int	init_thread(t_main *main)
+int	init_thread(t_all *all)
 {
 	int	i;
 
 	i = 0;
-	while (i < main->data.nb_philo)
+	while (i < all->data.nb_philo)
 	{
-		main->philos[i].p_data = &main->data;
-		if (pthread_create(&main->philos[i].philo_thread, NULL,
-				&life_cycle, &main->philos[i]) != 0)
-			{
-				ft_error("- Thread creation error -");
-				exit(1);				
-			}
+		all->philos[i].p_data = &all->data;
+		if (pthread_create(&all->philos[i].philo_thread, NULL,
+				&life_cycle, &all->philos[i]) != 0)
+		{
+			ft_error("Error : Thread creation");
+			exit(1);
+		}
 		i++;
 	}
-	pthread_create(&main->data.death_thread, NULL, check_death, (void *) main);
+	pthread_create(&all->data.death_thread, NULL, check_death, (void *) all);
 	return (1);
 }
 
 void	*life_cycle(void *data)
 {
-	t_philo		*philo;
+	t_ph		*ph;
 
-	philo = (t_philo *)data;
-	if (philo->name % 2 == 0)
-		ft_sleep(philo->p_data->eat_time / 2);
-	while (is_alive(philo->p_data, 1))
+	ph = (t_ph *)data;
+	if (ph->name % 2 == 0)
+		ft_sleep(ph->p_data->eat_time / 2);
+	while (is_alive(ph->p_data, 1))
 	{
-		sleep_eat_think(philo);
-		if (philo->p_data->eat_max == philo->count_eat)
+		routine(ph);
+		if (ph->p_data->eat_max == ph->count_eat)
 		{
-			pthread_mutex_lock(&philo->p_data->end_mutex);
-			philo->p_data->philo_done++;
-			philo->done = 1;
-			pthread_mutex_unlock(&philo->p_data->end_mutex);
+			pthread_mutex_lock(&ph->p_data->end_mutex);
+			ph->p_data->philo_done++;
+			ph->done = 1;
+			pthread_mutex_unlock(&ph->p_data->end_mutex);
 			return (NULL);
 		}
 	}
@@ -56,44 +56,44 @@ void	*life_cycle(void *data)
 
 void	*check_death(void *data)
 {
-	t_main	*main;
-	t_philo	*philo;
+	t_all	*all;
+	t_ph	*ph;
 	int		i;
 
-	main = (t_main *)data;
+	all = (t_all *)data;
 	i = 0;
-	philo = &main->philos[0];
-	while (is_alive(&main->data, 1))
+	ph = &all->philos[0];
+	while (is_alive(&all->data, 1))
 	{
-		boucle(main, philo);
+		boucle(all, ph);
 		i += 1;
-		i %= main->data.nb_philo;
-		philo = &main->philos[i];
+		i %= all->data.nb_philo;
+		ph = &all->philos[i];
 	}
 	return (NULL);
 }
 
-void	boucle(t_main *main, t_philo *philo)
+void	boucle(t_all *all, t_ph *ph)
 {
-	pthread_mutex_lock(&philo->p_data->eat_mutex);
-	pthread_mutex_lock(&philo->p_data->end_mutex);
-	if (is_alive(&main->data, 1) && !philo->done && actual_time_ms()
-		- philo->time_eaten >= (philo->p_data->life_time))
+	pthread_mutex_lock(&ph->p_data->eat_mutex);
+	pthread_mutex_lock(&ph->p_data->end_mutex);
+	if (is_alive(&all->data, 1) && !ph->done && actual_time_ms()
+		- ph->time_eaten >= (ph->p_data->life_time))
 	{
-		pthread_mutex_unlock(&philo->p_data->eat_mutex);
-		pthread_mutex_unlock(&philo->p_data->end_mutex);
-		status_print(*philo, " died");
-		is_alive(&main->data, 0);
+		pthread_mutex_unlock(&ph->p_data->eat_mutex);
+		pthread_mutex_unlock(&ph->p_data->end_mutex);
+		status_print(*ph, " died");
+		is_alive(&all->data, 0);
 		return ;
 	}
-	if (main->data.philo_done == main->data.nb_philo)
+	if (all->data.philo_done == all->data.nb_philo)
 	{
-		pthread_mutex_unlock(&philo->p_data->end_mutex);
-		pthread_mutex_unlock(&philo->p_data->eat_mutex);
-		printf("- The philos ate %d times -\n", philo->p_data->eat_max);
-		is_alive(philo->p_data, 0);
+		pthread_mutex_unlock(&ph->p_data->end_mutex);
+		pthread_mutex_unlock(&ph->p_data->eat_mutex);
+		printf("Philo(s) ate %d times\n", ph->p_data->eat_max);
+		is_alive(ph->p_data, 0);
 		return ;
 	}
-	pthread_mutex_unlock(&philo->p_data->eat_mutex);
-	pthread_mutex_unlock(&philo->p_data->end_mutex);
+	pthread_mutex_unlock(&ph->p_data->eat_mutex);
+	pthread_mutex_unlock(&ph->p_data->end_mutex);
 }

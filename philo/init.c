@@ -12,36 +12,36 @@
 
 #include "philosopher.h"
 
-void	init_hub(t_main *main)
+void	init(t_all *all)
 {
-	pthread_mutex_init(&main->data.write_mutex, NULL);
-	pthread_mutex_init(&main->data.eat_mutex, NULL);
-	pthread_mutex_init(&main->data.end_mutex, NULL);
-	pthread_mutex_init(&main->data.dead_mutex, NULL);
-	init_philos(main);
-	init_thread(main);
+	pthread_mutex_init(&all->data.write_mutex, NULL);
+	pthread_mutex_init(&all->data.eat_mutex, NULL);
+	pthread_mutex_init(&all->data.end_mutex, NULL);
+	pthread_mutex_init(&all->data.dead_mutex, NULL);
+	init_philos(all);
+	init_thread(all);
 }
 
-void	init_philos(t_main *main)
+void	init_philos(t_all *all)
 {
 	int	i;
 
 	i = 0;
-	main->data.start_time = actual_time_ms();
-	while (i < main->data.nb_philo)
+	all->data.start_time = actual_time_ms();
+	while (i < all->data.nb_philo)
 	{
-		main->philos[i].name = i + 1;
-		main->philos[i].count_eat = 0;
-		main->philos[i].time_eaten = main->data.start_time;
-		main->philos[i].right_fork = NULL;
-		main->philos[i].done = 0;
-		pthread_mutex_init(&main->philos[i].left_fork, NULL);
-		if (main->data.nb_philo == 1)
+		all->philos[i].name = i + 1;
+		all->philos[i].count_eat = 0;
+		all->philos[i].time_eaten = all->data.start_time;
+		all->philos[i].right_fork = NULL;
+		all->philos[i].done = 0;
+		pthread_mutex_init(&all->philos[i].left_fork, NULL);
+		if (all->data.nb_philo == 1)
 			break ;
-		if (i == main->data.nb_philo - 1)
-			main->philos[i].right_fork = &main->philos[0].left_fork;
+		if (i == all->data.nb_philo - 1)
+			all->philos[i].right_fork = &all->philos[0].left_fork;
 		else
-			main->philos[i].right_fork = &main->philos[i + 1].left_fork;
+			all->philos[i].right_fork = &all->philos[i + 1].left_fork;
 		i++;
 	}
 }

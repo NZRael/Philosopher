@@ -41,7 +41,7 @@ typedef struct s_data
 	long int		start_time;
 }					t_data;
 
-typedef struct s_philo
+typedef struct s_ph
 {
 	int					name;
 	pthread_t			philo_thread;
@@ -51,32 +51,32 @@ typedef struct s_philo
 	int					count_eat;
 	int					done;
 	t_data				*p_data;
-}						t_philo;
+}						t_ph;
 
-typedef struct s_main
+typedef struct s_all
 {
 	t_data	data;
-	t_philo	*philos;
-}			t_main;
+	t_ph	*philos;
+}			t_all;
 
-void		init_hub(t_main *main);
-int			parsing(t_main *main, char **argv, int argc);
-void		end(t_main *main);
-void		freeall(t_main *main);
-void		init_philos(t_main *main);
-int			init_thread(t_main *main);
-void		status_print(t_philo philo, char *message);
+void		init(t_all *all);
+int			parsing(t_all *all, char **argv, int argc);
+void		end(t_all *all);
+void		freeall(t_all *all);
+void		init_philos(t_all *all);
+int			init_thread(t_all *all);
+void		status_print(t_ph ph, char *message);
 void		*life_cycle(void *data);
-void		sleep_eat_think(t_philo *philo);
-void		take_fork_right(t_philo *philo);
-void		take_fork_left(t_philo *philo);
-void		boucle(t_main *main, t_philo *philo);
+void		routine(t_ph *ph);
+void		take_fork_right(t_ph *ph);
+void		take_fork_left(t_ph *ph);
+void		boucle(t_all *all, t_ph *ph);
 long int	actual_time_ms(void);
 int			is_alive(t_data *data, int i);
 void		ft_sleep(long int delay);
 void		*check_death(void *data);
 int			is_numeric(char **argv);
-int         ft_strlen(char *str);
+int			ft_strlen(char *str);
 int			ft_atoi(char *str);
 int			ft_error(char *str);
 

@@ -12,68 +12,68 @@
 
 #include "philosopher.h"
 
-void	status_print(t_philo philo, char *message)
+void	status_print(t_ph ph, char *message)
 {
 	long int	time;
 
-	pthread_mutex_lock(&philo.p_data->write_mutex);
-	time = actual_time_ms() - (philo.p_data->start_time);
-	if (is_alive(philo.p_data, 1) && time >= 0 && time <= 2147483647)
+	pthread_mutex_lock(&ph.p_data->write_mutex);
+	time = actual_time_ms() - (ph.p_data->start_time);
+	if (is_alive(ph.p_data, 1) && time >= 0 && time <= 2147483647)
 	{
-		printf ("- %ld ", time);
-		printf ("Philo %d %s -\n", philo.name, message);
+		printf("%ld ", time);
+		printf("Philo %d %s\n", ph.name, message);
 	}
-	pthread_mutex_unlock(&philo.p_data->write_mutex);
+	pthread_mutex_unlock(&ph.p_data->write_mutex);
 }
 
-void	sleep_eat_think(t_philo *philo)
+void	routine(t_ph *ph)
 {
-	if (philo->name == 1 && philo->p_data->nb_philo == 1)
-		take_fork_left(philo);
+	if (ph->name == 1 && ph->p_data->nb_philo == 1)
+		take_fork_left(ph);
 	else
-		take_fork_right(philo);
-	status_print(*philo, "is eating");
-	pthread_mutex_lock(&philo->p_data->eat_mutex);
-	philo->time_eaten = actual_time_ms();
-	pthread_mutex_unlock(&philo->p_data->eat_mutex);
-	philo->count_eat++;
-	ft_sleep(philo->p_data->eat_time);
-	if (philo->p_data->nb_philo != 1)
+		take_fork_right(ph);
+	status_print(*ph, "is eating");
+	pthread_mutex_lock(&ph->p_data->eat_mutex);
+	ph->time_eaten = actual_time_ms();
+	pthread_mutex_unlock(&ph->p_data->eat_mutex);
+	ph->count_eat++;
+	ft_sleep(ph->p_data->eat_time);
+	if (ph->p_data->nb_philo != 1)
 	{
-		pthread_mutex_unlock((philo->right_fork));
-		pthread_mutex_unlock(&(philo->left_fork));
+		pthread_mutex_unlock((ph->right_fork));
+		pthread_mutex_unlock(&(ph->left_fork));
 	}
-	status_print(*philo, "is sleeping");
-	ft_sleep(philo->p_data->sleep_time);
-	status_print(*philo, "is thinking");
+	status_print(*ph, "is sleeping");
+	ft_sleep(ph->p_data->sleep_time);
+	status_print(*ph, "is thinking");
 }
 
-void	take_fork_right(t_philo *philo)
+void	take_fork_right(t_ph *ph)
 {
-	pthread_mutex_lock((philo->right_fork));
-	status_print(*philo, "has taken a fork");
-	if (philo->p_data->nb_philo == 1)
+	pthread_mutex_lock((ph->right_fork));
+	status_print(*ph, "has taken a fork");
+	if (ph->p_data->nb_philo == 1)
 	{
-		pthread_mutex_unlock(philo->right_fork);
-		ft_sleep(philo->p_data->life_time * 1.2);
+		pthread_mutex_unlock(ph->right_fork);
+		ft_sleep(ph->p_data->life_time * 1.2);
 		return ;
 	}
-	pthread_mutex_lock(&(philo->left_fork));
-	status_print(*philo, "has taken a fork");
+	pthread_mutex_lock(&(ph->left_fork));
+	status_print(*ph, "has taken a fork");
 	return ;
 }
 
-void	take_fork_left(t_philo *philo)
+void	take_fork_left(t_ph *ph)
 {
-	pthread_mutex_lock(&(philo->left_fork));
-	status_print(*philo, "has taken a fork");
-	if (philo->p_data->nb_philo == 1)
+	pthread_mutex_lock(&(ph->left_fork));
+	status_print(*ph, "has taken a fork");
+	if (ph->p_data->nb_philo == 1)
 	{
-		pthread_mutex_unlock(&philo->left_fork);
-		ft_sleep(philo->p_data->life_time * 1.2);
+		pthread_mutex_unlock(&ph->left_fork);
+		ft_sleep(ph->p_data->life_time * 1.2);
 		return ;
 	}
-	pthread_mutex_lock((philo->right_fork));
-	status_print(*philo, "has taken a fork");
+	pthread_mutex_lock((ph->right_fork));
+	status_print(*ph, "has taken a fork");
 	return ;
 }
