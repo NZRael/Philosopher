@@ -6,69 +6,45 @@
 /*   By: sboetti <sboetti@student.42nice.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 16:52:07 by sboetti           #+#    #+#             */
-/*   Updated: 2023/08/03 16:52:07 by sboetti          ###   ########.fr       */
+/*   Updated: 2023/11/21 00:44:52 by sboetti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-int	ft_atoi(char *str)
+void	ft_sleep(long int delay)
 {
-	int	i;
-	int	nb;
+	long int	beginning;
 
-	i = 0;
-	nb = 0;
-	while (str[i])
-	{
-		nb = nb * 10 + str[i] - 48;
-		i++;
-	}
-	return (nb);
+	beginning = actual_time_ms();
+	while (actual_time_ms() - beginning < delay)
+		usleep(delay / 5);
 }
 
-int	ft_strlen(char *str)
+long int	actual_time_ms(void)
 {
-	int	i;
+	struct timeval	gtod_struct;
+	long int		time_ms;
 
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	if (gettimeofday(&gtod_struct, NULL) == -1)
+	{
+		ft_error("Error : gettimeofday return value -1");
+		exit(1);
+	}
+	time_ms = (gtod_struct.tv_sec * 1000) + (gtod_struct.tv_usec / 1000);
+	return (time_ms);
 }
 
-int	ft_check_args(int argc, char **argv)
+int	is_alive(t_data *data, int i)
 {
-	if (argc >= 5 && argc <= 6 && is_digit(argv, 1))
+	pthread_mutex_lock(&data->dead_mutex);
+	if (i == 0)
+		data->death_flag = 1;
+	if (data->death_flag == 1)
 	{
-		return (1);
+		pthread_mutex_unlock(&data->dead_mutex);
+		return (0);
 	}
-	return (0);
-}
-
-int	is_digit(char **argv, int j)
-{
-	int	i;
-
-	while (argv[j])
-	{
-		i = 0;
-		while (argv[j][i])
-		{
-			if (argv[j][i] < '0' || argv[j][i] > '9')
-				ft_exit("Args must be positive integers");
-			if (ft_strlen(argv[j]) > 10)
-				ft_exit("Args must be lower than 10 000 000 000");
-			i++;
-		}
-		j++;
-	}
+	pthread_mutex_unlock(&data->dead_mutex);
 	return (1);
-}
-
-void	ft_exit(char *str)
-{
-	printf("Error :\n");
-	printf("%s", str);
-	exit(1);
 }

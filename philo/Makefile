@@ -5,7 +5,12 @@ GREEN = \033[0;92m
 NAME = philo
 GCCFLG = gcc -Wall -Wextra -Werror -I .philosopher.h
 
-SRCS = philo_utils.c philosopher.c
+SRCS = philosopher.c \
+			init.c	\
+			routine.c	\
+			philo_utils.c \
+			philo_utils2.c \
+			thread.c	\
 
 OBJ = ./objs
 
@@ -14,7 +19,7 @@ OBJS = $(addprefix $(OBJ)/, ${SRCS:.c=.o})
 all: $(NAME)
 
 $(NAME): ${OBJS}
-	@$(GCCFLG) -o $(NAME) $(OBJS) #-fsanitize=address -g
+	@$(GCCFLG) -o $(NAME) $(OBJS) #-fsanitize=thread -g
 	@echo "$(GREEN)Philo is up to date!${DEFAULT}"
 
 $(OBJ)/%.o: ./%.c
