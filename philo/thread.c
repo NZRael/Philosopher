@@ -37,7 +37,7 @@ void	*life_cycle(void *data)
 	t_ph		*ph;
 
 	ph = (t_ph *)data;
-	if (ph->name % 2 == 0)
+	if (ph->id % 2 == 0)
 		ft_sleep(ph->p_data->eat_time / 2);
 	while (is_alive(ph->p_data, 1))
 	{

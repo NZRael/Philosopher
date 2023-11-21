@@ -30,7 +30,7 @@ void	init_philos(t_all *all)
 	all->data.start_time = actual_time_ms();
 	while (i < all->data.nb_philo)
 	{
-		all->philos[i].name = i + 1;
+		all->philos[i].id = i + 1;
 		all->philos[i].count_eat = 0;
 		all->philos[i].time_eaten = all->data.start_time;
 		all->philos[i].right_fork = NULL;

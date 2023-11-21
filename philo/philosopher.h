@@ -25,25 +25,21 @@ typedef struct s_data
 	int				nb_philo;
 	int				eat_max;
 	int				philo_done;
-	int				eat_max_flag;
 	int				death_flag;
 	pthread_t		death_thread;
-
 	int				life_time;
 	int				eat_time;
 	int				sleep_time;
-
 	pthread_mutex_t	write_mutex;
 	pthread_mutex_t	eat_mutex;
 	pthread_mutex_t	dead_mutex;
 	pthread_mutex_t	end_mutex;
-
 	long int		start_time;
 }					t_data;
 
 typedef struct s_ph
 {
-	int					name;
+	int					id;
 	pthread_t			philo_thread;
 	pthread_mutex_t		left_fork;
 	pthread_mutex_t		*right_fork;

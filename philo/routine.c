@@ -21,14 +21,14 @@ void	status_print(t_ph ph, char *message)
 	if (is_alive(ph.p_data, 1) && time >= 0 && time <= 2147483647)
 	{
 		printf("%ld ", time);
-		printf("Philo %d %s\n", ph.name, message);
+		printf("Philo %d %s\n", ph.id, message);
 	}
 	pthread_mutex_unlock(&ph.p_data->write_mutex);
 }
 
 void	routine(t_ph *ph)
 {
-	if (ph->name == 1 && ph->p_data->nb_philo == 1)
+	if (ph->id == 1 && ph->p_data->nb_philo == 1)
 		take_fork_left(ph);
 	else
 		take_fork_right(ph);

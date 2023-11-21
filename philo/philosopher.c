@@ -38,7 +38,6 @@ int	parsing(t_all *all, char **argv, int argc)
 	all->data.sleep_time = ft_atoi(argv[4]);
 	all->data.death_flag = 0;
 	all->data.eat_max = -1;
-	all->data.eat_max_flag = 0;
 	all->data.philo_done = 0;
 	if (argv[5])
 		all->data.eat_max = ft_atoi(argv[5]);

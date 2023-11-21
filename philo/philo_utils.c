@@ -14,10 +14,10 @@
 
 void	ft_sleep(long int delay)
 {
-	long int	beginning;
+	long int	start;
 
-	beginning = actual_time_ms();
-	while (actual_time_ms() - beginning < delay)
+	start = actual_time_ms();
+	while (actual_time_ms() - start < delay)
 		usleep(delay / 5);
 }
 
